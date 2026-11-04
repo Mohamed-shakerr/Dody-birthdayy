@@ -1,1 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For Dody</title>
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Alexandria:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bur:#351522;--wine:#24121C;--rose:#C18B9F;--blush:#F3E5E9;--gold:#D5B77A;
+--serif:"Cormorant Garamond","Times New Roman",serif;--ar:"Alexandria","IBM Plex Sans Arabic",Tahoma,sans-serif;
+color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(ellipse at 50% 18%,var(--bur) 0%,var(--wine) 70%);color:var(--blush);font-family:var(--serif);overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.glow{position:fixed;left:50%;top:30%;width:120vmin;height:120vmin;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(213,183,122,.14),transparent 62%);z-index:0;pointer-events:none;transition:opacity 2s;opacity:.7}
+body.bright .glow{opacity:1}
+.scene{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:max(28px,env(safe-area-inset-top)) 24px max(28px,env(safe-area-inset-bottom));overflow-y:auto;opacity:0;visibility:hidden;transition:opacity 1.2s ease,visibility 0s 1.2s}
+.scene.active{opacity:1;visibility:visible;transition:opacity 1.2s ease}
+.scene>*{max-width:34rem;width:100%}
+.rv{opacity:0;transform:translateY(14px);filter:blur(6px);transition:opacity .9s ease,transform .9s ease,filter .9s ease}
+.active .rv{opacity:1;transform:none;filter:none;transition-delay:var(--d,0s)}
+h1,h2,h3,p{margin:0}
+.ar{font-family:var(--ar);font-weight:300;line-height:2;direction:rtl;color:var(--blush)}
+.hey{font-weight:300;font-size:clamp(2.2rem,9vw,3.6rem);letter-spacing:.14em}
+.sub{font-style:italic;font-weight:300;font-size:clamp(1.15rem,4.5vw,1.5rem);color:var(--rose);margin-top:14px}
+.ar.s{font-size:clamp(.95rem,3.6vw,1.1rem);margin-top:26px;color:var(--blush);opacity:.9}
+.rule{width:64px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:28px auto 0}
+.btn{font-family:var(--serif);font-size:1.15rem;letter-spacing:.12em;color:var(--gold);background:rgba(36,18,28,.4);border:1px solid rgba(213,183,122,.55);border-radius:999px;padding:14px 34px;margin-top:36px;cursor:pointer;width:auto;position:relative;overflow:hidden;transition:background .5s,color .5s,box-shadow .5s}
+.btn:hover,.btn:focus-visible{background:var(--gold);color:var(--wine);box-shadow:0 0 34px rgba(213,183,122,.35)}
+.btn:focus-visible,.env:focus-visible,#mus:focus-visible{outline:2px solid var(--blush);outline-offset:4px}
+.pulse{animation:pl 3.2s ease-in-out infinite}
+@keyframes pl{50%{box-shadow:0 0 28px rgba(213,183,122,.3)}}
+.big{font-weight:300;line-height:1.02;letter-spacing:.08em;font-size:clamp(2.4rem,12vw,4.6rem)}
+.name{font-weight:400;font-style:italic;color:var(--gold);letter-spacing:.2em;font-size:clamp(3.4rem,18vw,7rem);line-height:1.05;margin-top:6px;text-shadow:0 0 50px rgba(213,183,122,.35)}
+.cards{display:flex;flex-direction:column;gap:16px;margin-top:6px}
+.card{border:1px solid rgba(213,183,122,.3);border-radius:4px;padding:24px 22px;background:linear-gradient(160deg,rgba(53,21,34,.75),rgba(36,18,28,.6));backdrop-filter:blur(4px)}
+.card h3{font-weight:400;font-size:1.7rem;color:var(--gold);letter-spacing:.05em}
+.card .ar{font-size:.98rem;margin-top:10px}
+.ttl{font-style:italic;font-weight:300;font-size:1.5rem;color:var(--rose);margin-bottom:18px}
+.env{position:relative;width:min(300px,82vw);height:200px;margin:0 auto;background:none;border:0;padding:0;cursor:pointer;perspective:900px;transition:opacity .8s,transform .9s}
+.env .bk,.env .fr,.env .fl{position:absolute;inset:0}
+.env .bk{background:#e8d3da;border-radius:3px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.env .fr{background:linear-gradient(135deg,#f3e5e9,#e2c8d1);clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);border-radius:3px}
+.env .fl{background:linear-gradient(180deg,#ecd9df,#d9bcc7);clip-path:polygon(0 0,100% 0,50% 62%);transform-origin:top;transition:transform 1s ease;z-index:2}
+.env .seal{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-14px 0 0 -23px;border-radius:50%;z-index:3;background:radial-gradient(circle at 35% 30%,#e9d29e,#b8985a);box-shadow:0 3px 10px rgba(0,0,0,.4);display:grid;place-items:center;color:var(--wine);font-size:1.3rem;font-style:italic;transition:opacity .5s}
+.env.open .fl{transform:rotateX(180deg);z-index:0}
+.env.open .seal{opacity:0}
+.env.gone{opacity:0;transform:translateY(40px) scale(.92);pointer-events:none}
+.hint{margin-top:22px;font-style:italic;color:var(--rose);font-size:1.1rem;transition:opacity .5s}
+#s4.opened .hint,#s4.opened .env{display:none}
+.paper{display:none;background:linear-gradient(180deg,#f7ecef,#f0dfe4);background-image:radial-gradient(rgba(53,21,34,.05) 1px,transparent 1px),linear-gradient(180deg,#f7ecef,#f0dfe4);background-size:5px 5px,auto;color:var(--bur);border-radius:3px;padding:34px 26px 30px;text-align:right;box-shadow:0 30px 80px rgba(0,0,0,.55),inset 0 0 0 7px #f7ecef,inset 0 0 0 8px rgba(213,183,122,.8);margin:auto}
+#s4.opened .paper{display:block}
+#s4.opened{justify-content:flex-start}
+.paper .ar{color:var(--bur);font-weight:400;font-size:1rem;line-height:2.1}
+.paper .ln{margin-bottom:18px;opacity:0;transform:translateY(10px);filter:blur(5px);transition:opacity 1.1s ease,transform 1.1s ease,filter 1.1s ease}
+.paper.on .ln{opacity:1;transform:none;filter:none;transition-delay:var(--d)}
+.en{direction:ltr;text-align:center;font-style:italic;font-size:1.3rem;line-height:1.5;border-top:1px solid rgba(181,141,80,.7);padding-top:20px;margin-top:6px}
+.en b{display:block;font-weight:500;font-style:normal;letter-spacing:.06em;margin-bottom:6px}
+.paper .btn{display:block;margin:10px auto 0;color:var(--bur);border-color:var(--bur);background:transparent;font-size:1.05rem}
+.paper .btn:hover,.paper .btn:focus-visible{background:var(--bur);color:var(--blush)}
+.one{font-weight:300;letter-spacing:.2em;font-size:clamp(1.5rem,6vw,2.1rem);color:var(--rose)}
+.quote{font-style:italic;font-weight:300;font-size:clamp(1.4rem,5.6vw,2rem);line-height:1.45;margin-top:28px}
+.hb{font-weight:400;font-size:clamp(1.8rem,7.5vw,2.6rem);color:var(--gold);margin-top:34px;letter-spacing:.05em}
+.sig{font-style:italic;color:var(--rose);margin-top:18px;font-size:1.15rem}
+#mus{position:fixed;right:max(16px,env(safe-area-inset-right));top:max(16px,env(safe-area-inset-top));z-index:5;width:42px;height:42px;border-radius:50%;border:1px solid rgba(213,183,122,.5);background:rgba(36,18,28,.55);color:var(--gold);cursor:pointer;display:none;font-size:1.1rem}
+#mus.on{background:var(--gold);color:var(--wine)}
+@media(min-width:700px){.cards{flex-direction:row}.scene>.cards{max-width:60rem}.card{flex:1}.paper{padding:48px 52px}.paper .ar{font-size:1.1rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01s!important;transition-delay:0s!important}.rv,.paper .ln{filter:none;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="cv" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+<button id="mus" type="button" aria-label="Play music" aria-pressed="false">♪</button>
+<audio id="aud" loop preload="none"></audio>
+
+<main>
+<section class="scene" id="s1" aria-label="The invitation">
+  <h1 class="hey rv" style="--d:.5s">HEY, DODY...</h1>
+  <p class="sub rv" style="--d:1.3s">Something special is waiting for you.</p>
+  <div class="rule rv" style="--d:1.9s"></div>
+  <p class="ar s rv" lang="ar" style="--d:2.3s">النهارده مش يوم عادي... ومكنتش هبدأه غير بحاجة تليق بيكي.</p>
+  <button class="btn pulse rv" style="--d:3s" data-go="1" type="button">Open Your Surprise ♡</button>
+</section>
+
+<section class="scene" id="s2" aria-label="Her special day">
+  <h2 class="big rv" style="--d:.6s">HAPPY BIRTHDAY</h2>
+  <p class="name rv" style="--d:1.6s">DODY</p>
+  <div class="rule rv" style="--d:2.4s"></div>
+  <p class="sub rv" style="--d:2.7s">A beautiful day for someone truly special.</p>
+  <p class="ar s rv" lang="ar" style="--d:3.3s">كل سنة وإنتِ طيبة يا Dody، ويارب السنة دي تيجي بكل اللي يليق بقلبك الحلو.</p>
+  <button class="btn rv" style="--d:4.2s" data-go="2" type="button">Continue</button>
+</section>
+
+<section class="scene" id="s3" aria-label="A few wishes">
+  <p class="ttl rv" style="--d:.3s">A few wishes</p>
+  <div class="cards">
+    <article class="card rv" style="--d:.9s"><h3>Beautiful Days</h3><p class="ar" lang="ar">أتمنى أيامك تمشي بهدوء حلو، وتفضل الفرحة تلاقيكي من غير ما تدوّري عليها.</p></article>
+    <article class="card rv" style="--d:1.9s"><h3>Dreams Come True</h3><p class="ar" lang="ar">وأتمنى كل حلم في قلبك يلاقي طريقه ليكي، وتوصلي له وإنتِ مطمنة وفخورة بنفسك.</p></article>
+    <article class="card rv" style="--d:2.9s"><h3>Always Special</h3><p class="ar" lang="ar">ومهما عدّت السنين، تفضلي إنتِ إنتِ... بنورك وببساطتك، وبحاجة فيكي ما تتقلدش.</p></article>
+  </div>
+  <button class="btn rv" style="--d:3.8s" data-go="3" type="button">Continue</button>
+</section>
+
+<section class="scene" id="s4" aria-label="A letter for you">
+  <p class="ttl rv" style="--d:.4s">A letter for you</p>
+  <button class="env rv" id="env" style="--d:1s" type="button" aria-label="Open the envelope">
+    <span class="bk"></span><span class="fr"></span><span class="fl"></span><span class="seal" aria-hidden="true">D</span>
+  </button>
+  <p class="hint rv" style="--d:1.6s">Tap the envelope</p>
+  <article class="paper" id="paper" lang="ar" dir="rtl">
+    <p class="ar ln">Dody،</p>
+    <p class="ar ln">النهارده كل الكلام بيبقى صغير قدام اللي عايز أقوله... بس قلت أحاول.</p>
+    <p class="ar ln">فيه ناس بتعدّي في حياتنا، وفيه ناس بتغيّر فينا حاجات كتير. وإنتِ من النوع التاني.</p>
+    <p class="ar ln">أتمنى لكِ سنة تليق بقلبك، فيها من الفرح اللي يملا عينك، ومن النجاح اللي تستاهليه، ومن اللحظات اللي لما تفتكريها تبتسمي.</p>
+    <p class="ar ln">وأتمنى تفضلي زي ما إنتِ، بهدوئك وبطيبتك، لأن فيكي حاجة بتخلّي الدنيا أخف.</p>
+    <p class="ar ln">ولو في حاجة واحدة عايزك تاخديها من الجواب ده، فهي إن وجودك في حياتي حاجة بعتز بيها، وإني فرحان إن بيني وبينك حكاية.</p>
+    <div class="en ln" lang="en" dir="ltr"><b>Happy Birthday, Dody.</b>May life always be as beautiful as the moments you bring into it.</div>
+    <button class="btn ln" data-go="4" type="button">Continue</button>
+  </article>
+</section>
+
+<section class="scene" id="s5" aria-label="The final surprise">
+  <p class="one rv" style="--d:.6s">ONE LAST THING...</p>
+  <p class="quote rv" style="--d:2s">Some people are not just a part of our memories. They become a beautiful part of our lives.</p>
+  <div class="rule rv" style="--d:4s"></div>
+  <p class="hb rv" style="--d:4.4s">Happy Birthday, Dody ♡</p>
+  <p class="sig rv" style="--d:5.2s">Made especially for you.</p>
+  <button class="btn rv" style="--d:6s" id="again" type="button">Experience It Again</button>
+</section>
+</main>
+
+<script>
+(function(){
+var AUDIO_SRC="song.mp3"; // add an audio file URL here to enable the music button
+var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+var sc=[].slice.call(document.querySelectorAll(".scene")),cur=-1;
+var env=document.getElementById("env"),paper=document.getElementById("paper"),s4=document.getElementById("s4");
+
+function resetLetter(){
+  env.classList.remove("open","gone");s4.classList.remove("opened");paper.classList.remove("on");
+  [].forEach.call(paper.querySelectorAll(".ln"),function(l){l.style.removeProperty("--d")});
+}
+function go(i){
+  if(i===3)resetLetter();
+  sc.forEach(function(s,k){var a=k===i;s.classList.toggle("active",a);s.inert=!a;if(a)s.scrollTop=0});
+  cur=i;
+  document.body.classList.toggle("bright",i===1||i===4);
+  if(i===1||i===4)burst(i===1?70:50);
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-go]");if(b)go(+b.dataset.go);
+});
+document.getElementById("again").addEventListener("click",function(){go(0)});
+
+env.addEventListener("click",function(){
+  if(env.classList.contains("open"))return;
+  env.classList.add("open");
+  setTimeout(function(){env.classList.add("gone")},RM?50:1100);
+  setTimeout(function(){
+    s4.classList.add("opened");s4.scrollTop=0;
+    var lns=paper.querySelectorAll(".ln");
+    [].forEach.call(lns,function(l,k){l.style.setProperty("--d",(0.4+k*1.1)+"s")});
+    requestAnimationFrame(function(){requestAnimationFrame(function(){paper.classList.add("on")})});
+  },RM?100:1800);
+});
+
+/* music */
+var mus=document.getElementById("mus"),aud=document.getElementById("aud");
+if(AUDIO_SRC){
+  aud.src=AUDIO_SRC;aud.volume=.35;mus.style.display="block";
+  mus.addEventListener("click",function(){
+    if(aud.paused){aud.play().then(function(){mus.classList.add("on");mus.setAttribute("aria-pressed","true");mus.setAttribute("aria-label","Pause music")}).catch(function(){mus.style.display="none"})}
+    else{aud.pause();mus.classList.remove("on");mus.setAttribute("aria-pressed","false");mus.setAttribute("aria-label","Play music")}
+  });
+  aud.addEventListener("error",function(){mus.style.display="none"});
+  function mark(){mus.classList.add("on");mus.setAttribute("aria-pressed","true");mus.setAttribute("aria-label","Pause music")}
+  function first(e){if(e.target.closest&&e.target.closest("#mus"))return;document.removeEventListener("pointerdown",first);document.removeEventListener("keydown",first);aud.play().then(mark).catch(function(){})}
+  aud.play().then(mark).catch(function(){document.addEventListener("pointerdown",first);document.addEventListener("keydown",first)});
+}
+
+/* particles */
+var cv=document.getElementById("cv"),cx=cv.getContext("2d"),W,H,P=[],dpr=Math.min(devicePixelRatio||1,2);
+function size(){W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0)}
+function R(a,b){return a+Math.random()*(b-a)}
+function petal(init){return{t:0,x:R(0,W),y:init?R(0,H):-20,s:R(6,13),vy:R(.25,.7),sw:R(0,6.28),sp:R(.006,.016),rot:R(0,6.28),vr:R(-.012,.012),a:R(.25,.55)}}
+function dust(init,life){return{t:1,x:R(0,W),y:init?R(0,H):H+10,s:R(.7,2.1),vy:-R(.1,.45),sw:R(0,6.28),sp:R(.005,.02),a:R(.2,.7),life:life||0,max:life||0}}
+function burst(n){if(RM)return;for(var i=0;i<n;i++)P.push(dust(false,R(260,520)))}
+function seed(){P=[];var n=W<600?14:24,d=W<600?28:48;for(var i=0;i<n;i++)P.push(petal(true));for(i=0;i<d;i++)P.push(dust(true))}
+function draw(){
+  cx.clearRect(0,0,W,H);
+  for(var i=P.length-1;i>=0;i--){
+    var p=P[i];p.sw+=p.sp;p.y+=p.vy;p.x+=Math.sin(p.sw)*(p.t?.25:.6);
+    var al=p.a;
+    if(p.life){p.life--;al=p.a*Math.min(1,p.life/p.max*2);if(p.life<=0){P.splice(i,1);continue}}
+    if(p.t===0){
+      p.rot+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);cx.globalAlpha=al;
+      cx.fillStyle="#C18B9F";cx.beginPath();cx.ellipse(0,0,p.s,p.s*.55,0,0,6.283);cx.fill();
+      cx.globalAlpha=al*.5;cx.fillStyle="#F3E5E9";cx.beginPath();cx.ellipse(-p.s*.25,-p.s*.1,p.s*.45,p.s*.2,0,0,6.283);cx.fill();cx.restore();
+      if(p.y>H+20)P[i]=petal(false);
+    }else{
+      cx.globalAlpha=al*(.6+.4*Math.sin(p.sw*3));cx.fillStyle="#D5B77A";cx.beginPath();cx.arc(p.x,p.y,p.s,0,6.283);cx.fill();
+      if(p.y<-10&&!p.life){p.y=H+10;p.x=R(0,W)}else if(p.y<-10)P.splice(i,1);
+    }
+  }
+  cx.globalAlpha=1;requestAnimationFrame(draw);
+}
+size();seed();
+addEventListener("resize",function(){size()});
+if(RM){/* static: a handful of still petals */P=P.slice(0,10);draw=function(){};cx.globalAlpha=.3;P.forEach(function(p){if(!p.t){cx.fillStyle="#C18B9F";cx.beginPath();cx.ellipse(p.x,p.y,p.s,p.s*.55,p.rot,0,6.283);cx.fill()}})}
+else requestAnimationFrame(draw);
+
+sc.forEach(function(s){s.inert=true});
+go(0);
+})();
+</script>
+</body>
+</html>
 
