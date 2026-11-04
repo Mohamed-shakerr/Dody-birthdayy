@@ -173,7 +173,7 @@ env.addEventListener("click",function(){
 /* music */
 var mus=document.getElementById("mus"),aud=document.getElementById("aud");
 if(AUDIO_SRC){
-  aud.src=AUDIO_SRC;aud.volume=.35;mus.style.display="block";
+  aud.src=Albumaty.Com.Hussein.Eljassmy.Ahebk.mp3;aud.volume=.35;mus.style.display="block";
   mus.addEventListener("click",function(){
     if(aud.paused){aud.play().then(function(){mus.classList.add("on");mus.setAttribute("aria-pressed","true");mus.setAttribute("aria-label","Pause music")}).catch(function(){mus.style.display="none"})}
     else{aud.pause();mus.classList.remove("on");mus.setAttribute("aria-pressed","false");mus.setAttribute("aria-label","Play music")}
